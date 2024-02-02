@@ -1,2 +1,2 @@
 .DS_Store
-[0-9]*main.c
+./[0-9]*main.c
