@@ -36,24 +36,44 @@ int get_height(const binary_tree_t *tree, int c, int max_height)
 }
 
 /**
+ * get_depth - measures the depth of a node in a binary tree.
+ *
+ * @tree: pointer to the node to measure the depth.
+ *
+ * Return: node depth. 0 if tree is NULL.
+ **/
+int get_depth(const binary_tree_t *tree)
+{
+	int depth = 0;
+
+	while (tree && tree->parent)
+	{
+		depth++;
+		tree = tree->parent;
+	}
+	return (depth);
+}
+/**
  * is_full - traverses the binray tree and checks if it's full.
  *
  * @tree: pointer to the root node of the tree to traverse.
  * @full: whether tree is full or not (1 -> full, 0 -> not full).
+ * @tree_height: height of the tree.
  *
  * Return: 1 if binary tree is full, 0 if if not.
  **/
-int is_full(const binary_tree_t *tree, int full)
+int is_full(const binary_tree_t *tree, int full, int tree_height)
 {
 	if (!tree)
 		return (full);
 
-	full = is_full(tree->left, full);
-	full = is_full(tree->right, full);
+	full = is_full(tree->left, full, tree_height);
+	full = is_full(tree->right, full, tree_height);
 
 	if (full == 0)
 		return (0);
-
+	if ((!tree->left && !tree->right) && get_depth(tree) != tree_height)
+		return (0);
 	return ((!tree->left && !tree->right) || (tree->left && tree->right));
 }
 
@@ -72,8 +92,10 @@ int binary_tree_is_perfect(const binary_tree_t *tree)
 	{
 		int full = 0;
 		int bf = 0;
+		int tree_height;
 
-		full = is_full(tree, 1);
+		tree_height = get_height(tree->left, 0, 0);
+		full = is_full(tree, 1, tree_height);
 		bf += get_height(tree->left, 0, 0);
 		bf -= get_height(tree->right, 0, 0);
 
